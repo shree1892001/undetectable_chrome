@@ -545,8 +545,58 @@ async function fillNextPage(page, data) {
             if (effectiveDate) {
                 
                 effectiveDate.click();
+                const  radio1=document.querySelector("input#P4_EXISTENCE_TYPE_0");
+                if(radio1.checked ==true){
+                    radio1.checked=true
+                }
+                const radio2=document.querySelector("input#P4_EXISTENCE_TYPE_1")
+
+                    if(radio2.checked ==true){
+                        const effectiveDateInput = document.querySelector('input[name="P4_EXIST_CALENDAR"]');
+                        if (effectiveDateInput) {
+                            effectiveDateInput.value = data.effectiveDate;
+            
+                            effectiveDateInput.dispatchEvent(new Event('change', { bubbles: true }));
+            
+                            const dateComponent = document.querySelector('#P4_EXIST_CALENDAR');
+                            if (dateComponent) {
+                                const event = new Event('ojInputDateValueChanged', { bubbles: true });
+                                dateComponent.dispatchEvent(event);
+                            }
+                        }                    
+                }
+
                  
-            if (Dissolution_Date) Dissolution_Date.click();
+
+            }
+
+            if (Dissolution_Date) {
+                
+                Dissolution_Date.click();
+
+
+                const radio1=document.querySelector("input#P4_DISSOLUTION_TYPE_0");
+                const radio2=document.querySelector("input#P4_DISSOLUTION_TYPE_1"); 
+
+                if(radio1.checked==true){
+                    radio1.checked ;
+                }
+               else if(radio2.checked==true){
+                const effectiveDateInput = document.querySelector('input[name="P4_DIS_CALENDAR"]');
+                if (effectiveDateInput) {
+                    effectiveDateInput.value = data.effectiveDate;
+    
+                    effectiveDateInput.dispatchEvent(new Event('change', { bubbles: true }));
+    
+                    const dateComponent = document.querySelector('#P4_DIS_CALENDAR');
+                    if (dateComponent) {
+                        const event = new Event('ojInputDateValueChanged', { bubbles: true });
+                        dateComponent.dispatchEvent(event);
+                    }
+                }     
+                }
+
+            }
             if (liability_statement) liability_statement.click();
 
             const opt1 = document.querySelector("input#P4_SOP_ADDR_OPTION_0");
