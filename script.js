@@ -701,23 +701,36 @@ async function fillNextPage(page, data) {
                 });
 }
 
-async function retry(fn,retries=10,delay=2000){
+async function retry(fn, retries = 5, delay = 5000) {
     for (let i = 0; i < retries; i++) {
         try {
             await fn();
-            return;
-        } catch (e) {
-            console.error(`Attempt ${i + 1} failed:`, e);
-            if (i < retries - 1) {
-                console.log(`Retrying in ${delay / 1000} seconds...`);
+            break;
+        } catch (error) {
+            if (isNetworkError(error)) {
+                if (i === retries - 1) throw error;
+                console.log(`Network error occurred. Retrying in ${delay / 1000} seconds... (${i + 1}/${retries})`);
                 await new Promise(resolve => setTimeout(resolve, delay));
             } else {
-                throw e;
+                throw error;
             }
         }
     }
 }
 
+function isNetworkError(error) {
+    const networkErrorMessages = [
+        'ERR_INTERNET_DISCONNECTED',
+        'ERR_CONNECTION_REFUSED',
+        'ERR_CONNECTION_TIMED_OUT',
+        'ERR_NETWORK_CHANGED',
+        'ERR_NAME_NOT_RESOLVED',
+        'ERR_SSL_PROTOCOL_ERROR'
+    ];
+
+    return networkErrorMessages.some(errMsg => error.message.includes(errMsg));
+}
+
 (async () => {
-    await retry(main, 5, 60000); // Retries the entire script up to 5 times with 60 seconds delay between retries
+    await retry(main, 5, 60000);
 })();
