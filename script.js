@@ -339,13 +339,15 @@ async function main() {
         browser = await puppeteer.launch({
             headless: false,
             args: [
+                '--start-maximized', 
+
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-infobars',
-                '--window-position=0,0',
                 '--ignore-certifcate-errors',
                 '--ignore-certifcate-errors-spki-list',
                 '--disable-blink-features=AutomationControlled',
+
             ],
             ignoreHTTPSErrors: true,
             defaultViewport: null,
