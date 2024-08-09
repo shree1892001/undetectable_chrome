@@ -494,6 +494,9 @@ async function addData(page, data) {
 
         await page.waitForSelector('form', { visible: true, timeout: 120000 });
 
+        await page.hover('button.t-Button--hot');
+
+
         await page.evaluate((data) => {
             const nameField = document.querySelector('input[name="P2_ENTITY_NAME"]');
             const checkbox = document.querySelector('input[name="P2_CHECKBOX"]');
@@ -543,6 +546,7 @@ async function fillNextPage(page, data) {
         console.log("Filling the next page...");
 
         await page.waitForSelector('div#P4_INITIAL_STATEMENT_CONTAINER', { visible: true, timeout: 30000 });
+
 
         await page.evaluate((data) => {
             const radioButtons = document.querySelectorAll('input[name="P4_INITIAL_STATEMENT"]');
@@ -673,13 +677,18 @@ async function fillNextPage(page, data) {
         }, e.message);
         console.error("Filling next page failed:", e);
     }
+    await page.hover('button.t-Button--hot');
+
+
     await page.evaluate(() => {
                     const submitButton = document.querySelector('button.t-Button--hot');
                     if (submitButton) {
+
                         submitButton.click();
                     }
                 });
 }
+
 async function retry(fn,retries=10,delay=2000){
     for (let i = 0; i < retries; i++) {
         try {
