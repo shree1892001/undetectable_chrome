@@ -375,7 +375,9 @@ async function main() {
         console.log("Opening the link Domestic Business Corporation and Domestic Limited Liability Company..");
         const firstLinkUrl = await page.evaluate(() => {
             const firstLink = document.querySelector('ul.t-LinksList li.t-LinksList-item:nth-child(1) a.t-LinksList-link');
+            firstLink.scrollIntoView()
             return firstLink ? firstLink.getAttribute('href') : null;
+
         });
         await randomSleep(3000, 5000);
 
@@ -392,6 +394,7 @@ async function main() {
         console.log("Getting the url for Articles of Organization for a Domestic Limited Liability Company (not for professional service limited liability companies)...");
         const secondLinkUrl = await page.evaluate(() => {
             const secondLink = document.querySelector('ul.t-LinksList li.t-LinksList-item:nth-child(2) a.t-LinksList-link');
+            secondLink.scrollIntoView()
             return secondLink ? secondLink.getAttribute('href') : null;
         });
         await randomSleep(3000, 5000);
@@ -468,8 +471,11 @@ async function performLogin(page) {
 
         await page.evaluate(() => {
             const usernameField = document.querySelector('input[name="P101_USERNAME"]');
+            usernameField.scrollIntoView()
             const passwordField = document.querySelector('input[name="P101_PASSWORD"]');
+            passwordField.scrollIntoView()
             const submitButton = document.querySelector('button#P101_LOGIN');
+            submitButton.scrollIntoView()
 
             if (!usernameField || !passwordField || !submitButton) {
                 throw new Error("Couldn't find login elements");
@@ -497,12 +503,13 @@ async function addData(page, data) {
         await page.waitForSelector('form', { visible: true, timeout: 120000 });
 
         await page.hover('button.t-Button--hot');
-
+        
 
         await page.evaluate((data) => {
             const nameField = document.querySelector('input[name="P2_ENTITY_NAME"]');
             const checkbox = document.querySelector('input[name="P2_CHECKBOX"]');
             const submitButton = document.querySelector('button.t-Button--hot');
+           
 
             if (!nameField || !submitButton) {
                 throw new Error("Couldn't find name field or submit button");
@@ -560,8 +567,11 @@ async function fillNextPage(page, data) {
             document.querySelector('#P4_COUNTY').value = "4";
 
             const effectiveDate = document.querySelector('input#P4_EXISTENCE_OPTION_0');
+            effectiveDate.scrollIntoView()
             const Dissolution_Date = document.querySelector('input#P4_DISSOLUTION_OPTION_0');
+            Dissolution_Date.scrollIntoView()
             const liability_statement = document.querySelector('input#P4_LIAB_STATEMENT_0');
+            liability_statement.scrollIntoView()
 
             if (effectiveDate) {
                 effectiveDate.click();
@@ -708,4 +718,6 @@ async function retry(fn,retries=10,delay=2000){
     }
 }
 
-main();
+(async () => {
+    await retry(main, 5, 60000); // Retries the entire script up to 5 times with 60 seconds delay between retries
+})();
